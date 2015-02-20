@@ -27,8 +27,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-if !exists('g:textobj_function_python_select')
-  function! g:textobj_function_python_select(object_type)
+if !exists('s:textobj_function_python_select')
+  function! s:textobj_function_python_select(object_type)
     return s:select_{a:object_type}()
   endfunction
 
@@ -154,7 +154,7 @@ if !exists('g:textobj_function_python_select')
 endif
 
 
-let b:textobj_function_select = function('g:textobj_function_python_select')
+let b:textobj_function_select = function('s:textobj_function_python_select')
 
 
 nnoremap <buffer> <silent> ]pc :call search('^\s*\zsclass ', 'W')<CR>
