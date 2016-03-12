@@ -32,7 +32,7 @@ let s:VSPEC_BLOCK_PATTERNS = {
 \   'end': '\v^\s*<end>',
 \ }
 
-function! textobj#function#vim#select(object_type)
+function! textobj#function#julia#select(object_type)
   return s:select_{a:object_type}()
 endfunction
 
