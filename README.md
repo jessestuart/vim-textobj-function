@@ -24,7 +24,14 @@ tell the syntax of a function to vim-textobj-function before editing.
 The following languages are currently supported:
 
 * C language
+* C#
 * Java
+* JavaScript
+* Julia
+* Perl
+* PHP
+* Python
+* Ruby
 * Vim script
   (including [vim-vspec](https://github.com/kana/vim-vspec)-specific syntax)
 
@@ -42,6 +49,27 @@ This a fork of the useful [kana's vim-textobj-function](https://github.com/kana/
 My goal is to support more languages to its last version to make it more and more useful.
 
 ## Next languages to support
+
+* Bash/Shell
+* C++
+* Clojure
+* CoffeeScript
+* Elm
+* Erlang
+* F#
+* Go
+* Go
+* Groovy
+* Haskell
+* Kotlin
+* Lisp
+* Objective-C
+* Prolog
+* R
+* Scala
+* Scheme
+* Swift
+* TypeScript
 
 
 <!-- vim: set expandtab shiftwidth=4 softtabstop=4 textwidth=78 : -->

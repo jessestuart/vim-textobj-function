@@ -22,23 +22,40 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 
-function! textobj#function#c#select(object_type)
+function! textobj#function#php#select(object_type)
   return s:select_{a:object_type}()
 endfunction
 
 function! s:select_a()
-  if getline('.') != '}'
-    normal! ][
+  " @todo normal comment before function
+  if getline('.') =~# '}'
+    normal! k
   endif
-  let e = getpos('.')
-  normal! %
-  call search(')', 'bc')
-  normal! %0k
-  if substitute(getline('.'), '^\s*$', '', '') == ''
-    normal! j
+  "search down, if not in comment then done
+  let x = 0
+  while x < 3
+    call search('}', 'W')
+    let syntype = synIDattr(synID(line('.'), col('.'), 1), "name")
+    let syncomment = 0
+    if syntype =~ "phpComment" || syntype =~ 'phpDocTags'
+      let syncomment = 1
+    endif
+    if syncomment == 0
+      break
+    endif
+    let x = x+1
+  endwhile
+  let c = search('function', 'bW')
+  let fpos = getpos('.')
+  "handle docblock
+  if getline(c-1) =~ "*/"
+    call search('/\*\*', 'bW')
   endif
   let b = getpos('.')
-
+  call setpos('.', fpos)
+  call search('{', 'W')
+  normal! $%
+  let e = getpos('.')
   if 1 < e[1] - b[1]  " is there some code?
     return ['V', b, e]
   else
@@ -47,21 +64,25 @@ function! s:select_a()
 endfunction
 
 function! s:select_i()
-  if getline('.') != '}'
-    normal! ][
+  let range = s:select_a()
+  if range is 0
+    return 0
   endif
-  let e = getpos('.')
-  normal! %
-  let b = getpos('.')
 
-  if 1 < e[1] - b[1]  " is there some code?
-    call setpos('.', b)
-    normal! j0
-    let b = getpos('.')
-    call setpos('.', e)
-    normal! k$
-    let e = getpos('.')
-    return ['V', b, e]
+  let [_, ab, ae] = range
+
+  call setpos('.', ae)
+
+  let ie = getpos('.')
+  let ie[1] = ie[1] - 1
+
+  normal! $%
+
+  let ib = getpos('.')
+  let ib[1] = ib[1] + 1
+
+  if 0 <= ie[1] - ib[1]  " is there some code?
+    return ['V', ib, ie]
   else
     return 0
   endif

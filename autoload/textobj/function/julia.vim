@@ -22,24 +22,39 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 
-function! textobj#function#c#select(object_type)
+let s:FUNCTION_PATTERNS = {
+\   'begin': '^\s*function\>',
+\   'end': '^\s*end\>',
+\ }
+
+let s:VSPEC_BLOCK_PATTERNS = {
+\   'begin': '\v^\s*<%(describe|it|before|after)>',
+\   'end': '\v^\s*<end>',
+\ }
+
+function! textobj#function#julia#select(object_type)
   return s:select_{a:object_type}()
 endfunction
 
 function! s:select_a()
-  if getline('.') != '}'
-    normal! ][
+  let r = s:select_a_of(s:FUNCTION_PATTERNS)
+  return r is 0 ? s:select_a_of(s:VSPEC_BLOCK_PATTERNS) : r
+endfunction
+
+function! s:select_a_of(patterns)
+  if getline('.') !~# a:patterns.end
+    if searchpair(a:patterns.begin, '', a:patterns.end, 'W') <= 0
+      " The cursor seems not to be placed on any function.
+      return 0
+    endif
   endif
+  normal! $
   let e = getpos('.')
-  normal! %
-  call search(')', 'bc')
-  normal! %0k
-  if substitute(getline('.'), '^\s*$', '', '') == ''
-    normal! j
-  endif
+  normal! 0
+  call searchpair(a:patterns.begin, '', a:patterns.end, 'bW')
   let b = getpos('.')
 
-  if 1 < e[1] - b[1]  " is there some code?
+  if b != e
     return ['V', b, e]
   else
     return 0
@@ -47,24 +62,23 @@ function! s:select_a()
 endfunction
 
 function! s:select_i()
-  if getline('.') != '}'
-    normal! ][
-  endif
-  let e = getpos('.')
-  normal! %
-  let b = getpos('.')
-
-  if 1 < e[1] - b[1]  " is there some code?
-    call setpos('.', b)
-    normal! j0
-    let b = getpos('.')
-    call setpos('.', e)
-    normal! k$
-    let e = getpos('.')
-    return ['V', b, e]
-  else
+  let range = s:select_a()
+  if range is 0
     return 0
   endif
+
+  let [_, ba, ea] = range
+  if ea[1] - ba[1] <= 1  " The function doesn't contain any code.
+    return 0
+  endif
+
+  call setpos('.', ba)
+  normal! j0
+  let bi = getpos('.')
+  call setpos('.', ea)
+  normal! k$
+  let ei = getpos('.')
+  return ['V', bi, ei]
 endfunction
 
 " __END__  "{{{1

@@ -1,6 +1,7 @@
 " textobj-function - Text objects for functions
 " Version: 0.4.0
 " Copyright (C) 2014 Kana Natsuno <http://whileimautomaton.net/>
+"               2013-2014 Jan Larres <jan@majutsushi.net>
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -22,21 +23,20 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 
-function! textobj#function#c#select(object_type)
+function! textobj#function#cs#select(object_type)
   return s:select_{a:object_type}()
 endfunction
 
 function! s:select_a()
-  if getline('.') != '}'
-    normal! ][
+  if getline('.') =~# '}'
+    normal! k
   endif
+  normal! ]M$
   let e = getpos('.')
-  normal! %
-  call search(')', 'bc')
-  normal! %0k
-  if substitute(getline('.'), '^\s*$', '', '') == ''
-    normal! j
-  endif
+
+  normal! [m
+  call search(')', 'bW')
+  normal! %0
   let b = getpos('.')
 
   if 1 < e[1] - b[1]  " is there some code?
@@ -47,21 +47,24 @@ function! s:select_a()
 endfunction
 
 function! s:select_i()
-  if getline('.') != '}'
-    normal! ][
+  let range = s:select_a()
+  if range is 0
+    return 0
   endif
-  let e = getpos('.')
-  normal! %
-  let b = getpos('.')
 
-  if 1 < e[1] - b[1]  " is there some code?
-    call setpos('.', b)
-    normal! j0
-    let b = getpos('.')
-    call setpos('.', e)
-    normal! k$
-    let e = getpos('.')
-    return ['V', b, e]
+  let [_, ab, ae] = range
+
+  call setpos('.', ab)
+  call search('{', 'W')
+  normal! j0
+  let ib = getpos('.')
+
+  call setpos('.', ae)
+  normal! k$
+  let ie = getpos('.')
+
+  if 0 <= ie[1] - ib[1]  " is there some code?
+    return ['V', ib, ie]
   else
     return 0
   endif
