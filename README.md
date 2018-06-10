@@ -1,6 +1,6 @@
 # vim-textobj-function
 
-[![Build Status](https://travis-ci.org/kana/vim-textobj-function.png)](https://travis-ci.org/kana/vim-textobj-function)
+[![Build Status](https://travis-ci.org/blackheaven/vim-textobj-function.png)](https://travis-ci.org/blackheaven/vim-textobj-function)
 
 
 
@@ -20,8 +20,8 @@ For example,
 - `viF` to visually select a function without leading or trailing blank lines.
 
 The syntax of a "function" is varied for each language.  So that you have to
-tell the syntax of a function to vim-textobj-function before editing.  By
-default, the following languages are supported:
+tell the syntax of a function to vim-textobj-function before editing.
+The following languages are currently supported:
 
 * C language
 * Java
@@ -30,10 +30,18 @@ default, the following languages are supported:
 
 To support new languages, see:
 
-* [The reference manual](https://github.com/kana/vim-textobj-function/blob/master/doc/textobj-function.txt)
-* [The implementation for currently supported languages](https://github.com/kana/vim-textobj-function/tree/master/after/ftplugin)
+* [The reference manual](https://github.com/blackheaven/vim-textobj-function/blob/master/doc/textobj-function.txt)
+* [The implementation for currently supported languages](https://github.com/blackheaven/vim-textobj-function/tree/master/after/ftplugin)
 
 
+# About this fork
+## Genesis
+
+This a fork of the useful [kana's vim-textobj-function](https://github.com/kana/vim-textobj-function).
+
+My goal is to support more languages to its last version to make it more and more useful.
+
+## Next languages to support
 
 
 <!-- vim: set expandtab shiftwidth=4 softtabstop=4 textwidth=78 : -->
