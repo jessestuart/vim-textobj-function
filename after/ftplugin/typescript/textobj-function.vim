@@ -1,4 +1,4 @@
-" Vim additional ftplugin: javascript/textobj-function
+" Vim additional ftplugin: typescript/textobj-function
 " Version: 0.1.1
 " Author : thinca <http://d.hatena.ne.jp/thinca/>
 " License: Creative Commons Attribution 2.1 Japan License
@@ -7,8 +7,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-if !exists('*s:textobj_function_javascript_select')
-  function! s:textobj_function_javascript_select(object_type)
+if !exists('*s:textobj_function_typescript_select')
+  function! s:textobj_function_typescript_select(object_type)
     return s:select_{a:object_type}()
   endfunction
 
@@ -152,7 +152,7 @@ if !exists('*s:textobj_function_javascript_select')
   endfunction
 endif
 
-let b:textobj_function_select = function('s:textobj_function_javascript_select')
+let b:textobj_function_select = function('s:textobj_function_typescript_select')
 
 if exists('b:undo_ftplugin')
   let b:undo_ftplugin .= ' | '
